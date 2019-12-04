@@ -28,10 +28,10 @@
 //! |-------|-------|--------|---------|
 //! | [`SystemClock`] | `clock_gettime(CLOCK_REALTIME)` | `gettimeofday` | `GetSystemTimeAsFileTime` |
 //! | [`SteadyClock`] | `clock_gettime(CLOCK_MONOTONIC)` | `mach_timebase_info`, `mach_absolute_time` | `QueryPerformanceCounter`, `QueryPerformanceFrequency` |
-//! | [`ProcessRealCPUClock`] | `times` | `times` | `GetProcessTimes` |
+//! | [`ProcessRealCPUClock`] | `times` | `times` | `QueryPerformanceCounter`, `QueryPerformanceFrequency` |
 //! | [`ProcessUserCPUClock`] | `times` | `times` | `GetProcessTimes` |
 //! | [`ProcessSystemCPUClock`] | `times` | `times` | `GetProcessTimes` |
-//! | [`ProcessCPUClock`] | `times` | `times` | `GetProcessTimes` |
+//! | [`ProcessCPUClock`] | `times` | `times` | `GetProcessTimes`, `QueryPerformanceCounter`, `QueryPerformanceFrequency` |
 //! | [`ThreadClock`] | `clock_gettime(pthread_getcpuclockid)` | `thread_info` | `GetThreadTimes` |
 
 cfg_if::cfg_if! {
