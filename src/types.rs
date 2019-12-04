@@ -97,3 +97,25 @@ impl SubAssign for ProcessDuration {
         *self = *self - rhs;
     }
 }
+
+/// A trait to represent a clock.
+pub trait Clock {
+    type Output;
+
+    /// Return the current timepoint.
+    ///
+    /// # Errors
+    ///
+    /// This function will return an error if acessing to the underlying system calls failed.
+    fn try_now() -> Result<Self::Output>;
+
+    /// Return the current timepoint.
+    ///
+    /// # Panics
+    ///
+    /// This function might panic when acessing to the underlying system calls failed.
+    /// Use [`try_now`](Clock::try_now) if you want to handle the error.
+    fn now() -> Self::Output {
+        Self::try_now().expect("Failed to access the clock.")
+    }
+}

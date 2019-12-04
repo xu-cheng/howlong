@@ -12,7 +12,7 @@ use winapi::um::{
     winnt::LARGE_INTEGER,
 };
 
-use crate::{Duration, Error, ProcessTimePoint, Result, TimePoint};
+use crate::{Clock, Duration, Error, ProcessTimePoint, Result, TimePoint};
 
 fn errno() -> i32 {
     unsafe { GetLastError() as i32 }
@@ -26,8 +26,10 @@ fn filetime_to_duration(ft: FILETIME) -> Duration {
 /// A system clock.
 pub struct SystemClock;
 
-impl SystemClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for SystemClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let mut ft = FILETIME {
             dwLowDateTime: 0,
             dwHighDateTime: 0,
@@ -40,8 +42,10 @@ impl SystemClock {
 /// A steady clock.
 pub struct SteadyClock;
 
-impl SteadyClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for SteadyClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let mut freq: LARGE_INTEGER = unsafe { mem::zeroed() };
         let ret = unsafe { QueryPerformanceFrequency(&mut freq) };
         if ret == 0 {
@@ -61,8 +65,10 @@ impl SteadyClock {
 /// A clock to report the real process wall-clock.
 pub struct ProcessRealCPUClock;
 
-impl ProcessRealCPUClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for ProcessRealCPUClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         SteadyClock::now()
     }
 }
@@ -103,8 +109,10 @@ fn get_process_times() -> Result<(FILETIME, FILETIME)> {
 /// A clock to report the user cpu-clock.
 pub struct ProcessUserCPUClock;
 
-impl ProcessUserCPUClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for ProcessUserCPUClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let (user_time, _) = get_process_times()?;
         Ok(TimePoint(filetime_to_duration(user_time)))
     }
@@ -113,8 +121,10 @@ impl ProcessUserCPUClock {
 /// A clock to report the system cpu-clock.
 pub struct ProcessSystemCPUClock;
 
-impl ProcessSystemCPUClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for ProcessSystemCPUClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let (_, system_time) = get_process_times()?;
         Ok(TimePoint(filetime_to_duration(system_time)))
     }
@@ -123,8 +133,10 @@ impl ProcessSystemCPUClock {
 /// A clock to report real, user-CPU, and system-CPU clocks.
 pub struct ProcessCPUClock;
 
-impl ProcessCPUClock {
-    pub fn now() -> Result<ProcessTimePoint> {
+impl Clock for ProcessCPUClock {
+    type Output = ProcessTimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let (user_time, system_time) = get_process_times()?;
         Ok(ProcessTimePoint {
             real: SteadyClock::now()?.0,
@@ -137,8 +149,10 @@ impl ProcessCPUClock {
 /// A clock to report the real thread wall-clock.
 pub struct ThreadClock;
 
-impl ThreadClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for ThreadClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let mut creation = FILETIME {
             dwLowDateTime: 0,
             dwHighDateTime: 0,

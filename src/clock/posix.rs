@@ -3,7 +3,7 @@
 extern crate errno;
 extern crate libc;
 
-use crate::{Duration, Error, ProcessTimePoint, Result, TimePoint};
+use crate::{Clock, Duration, Error, ProcessTimePoint, Result, TimePoint};
 
 pub(crate) fn errno() -> i32 {
     errno::errno().into()
@@ -12,8 +12,10 @@ pub(crate) fn errno() -> i32 {
 /// A system clock.
 pub struct SystemClock;
 
-impl SystemClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for SystemClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let mut ts = libc::timespec {
             tv_sec: 0,
             tv_nsec: 0,
@@ -32,8 +34,10 @@ impl SystemClock {
 pub struct SteadyClock;
 
 #[cfg(have_steady_clock)]
-impl SteadyClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for SteadyClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let mut ts = libc::timespec {
             tv_sec: 0,
             tv_nsec: 0,
@@ -76,8 +80,10 @@ fn times() -> Result<(libc::clock_t, libc::tms)> {
 /// A clock to report the real process wall-clock.
 pub struct ProcessRealCPUClock;
 
-impl ProcessRealCPUClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for ProcessRealCPUClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let (c, _) = times()?;
         let factor = tick_factor()?;
         let d = Duration::from_nanos((c as u64) * factor);
@@ -88,8 +94,10 @@ impl ProcessRealCPUClock {
 /// A clock to report the user cpu-clock.
 pub struct ProcessUserCPUClock;
 
-impl ProcessUserCPUClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for ProcessUserCPUClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let (_, tm) = times()?;
         let factor = tick_factor()?;
         let d = Duration::from_nanos(((tm.tms_utime + tm.tms_cutime) as u64) * factor);
@@ -100,8 +108,10 @@ impl ProcessUserCPUClock {
 /// A clock to report the system cpu-clock.
 pub struct ProcessSystemCPUClock;
 
-impl ProcessSystemCPUClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for ProcessSystemCPUClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let (_, tm) = times()?;
         let factor = tick_factor()?;
         let d = Duration::from_nanos(((tm.tms_stime + tm.tms_cstime) as u64) * factor);
@@ -112,8 +122,10 @@ impl ProcessSystemCPUClock {
 /// A clock to report real, user-CPU, and system-CPU clocks.
 pub struct ProcessCPUClock;
 
-impl ProcessCPUClock {
-    pub fn now() -> Result<ProcessTimePoint> {
+impl Clock for ProcessCPUClock {
+    type Output = ProcessTimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let (c, tm) = times()?;
         let factor = tick_factor()?;
         Ok(ProcessTimePoint {
@@ -135,30 +147,32 @@ extern "C" {
     ) -> libc::c_int;
 }
 
-impl ThreadClock {
-    #[cfg(have_clock_thread_cputime_id)]
-    #[inline(always)]
-    fn get_thread_clock_id() -> Result<libc::clockid_t> {
-        Ok(libc::CLOCK_THREAD_CPUTIME_ID)
-    }
+#[cfg(have_clock_thread_cputime_id)]
+#[inline(always)]
+fn get_thread_clock_id() -> Result<libc::clockid_t> {
+    Ok(libc::CLOCK_THREAD_CPUTIME_ID)
+}
 
-    #[cfg(not(have_clock_thread_cputime_id))]
-    #[inline(always)]
-    fn get_thread_clock_id() -> Result<libc::clockid_t> {
-        let mut clock_id: libc::clockid_t = 0;
-        let ret = unsafe { pthread_getcpuclockid(libc::pthread_self(), &mut clock_id) };
-        if ret != 0 {
-            return Err(Error::SystemError("pthread_getcpuclockid", errno()));
-        }
-        Ok(clock_id)
+#[cfg(not(have_clock_thread_cputime_id))]
+#[inline(always)]
+fn get_thread_clock_id() -> Result<libc::clockid_t> {
+    let mut clock_id: libc::clockid_t = 0;
+    let ret = unsafe { pthread_getcpuclockid(libc::pthread_self(), &mut clock_id) };
+    if ret != 0 {
+        return Err(Error::SystemError("pthread_getcpuclockid", errno()));
     }
+    Ok(clock_id)
+}
 
-    pub fn now() -> Result<TimePoint> {
+impl Clock for ThreadClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let mut ts = libc::timespec {
             tv_sec: 0,
             tv_nsec: 0,
         };
-        let clock_id = Self::get_thread_clock_id()?;
+        let clock_id = get_thread_clock_id()?;
         let ret = unsafe { libc::clock_gettime(clock_id, &mut ts) };
         if ret != 0 {
             return Err(Error::SystemError("clock_gettime", errno()));

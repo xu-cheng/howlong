@@ -1,6 +1,6 @@
 extern crate howlong;
 
-use howlong::{clock::*, Duration};
+use howlong::{clock::*, Clock, Duration};
 use std::thread;
 
 macro_rules! test_clock {
@@ -8,9 +8,9 @@ macro_rules! test_clock {
         #[test]
         fn $name() {
             let ten_millis = Duration::from_millis(10);
-            let start = <$clock>::now().unwrap();
+            let start = <$clock>::now();
             thread::sleep(ten_millis);
-            let elapsed = <$clock>::now().unwrap() - start;
+            let elapsed = <$clock>::now() - start;
             assert!(elapsed >= ten_millis);
         }
     };
@@ -28,28 +28,28 @@ fn computation_task() {
 
 #[test]
 fn test_process_user_cpu_clock() {
-    let start = ProcessUserCPUClock::now().unwrap();
+    let start = ProcessUserCPUClock::now();
     computation_task();
-    let elapsed = ProcessUserCPUClock::now().unwrap() - start;
+    let elapsed = ProcessUserCPUClock::now() - start;
     assert!(elapsed > Duration::from_nanos(0));
 }
 
 #[test]
 fn test_process_system_cpu_clock() {
-    let start = ProcessSystemCPUClock::now().unwrap();
-    let elapsed = ProcessSystemCPUClock::now().unwrap() - start;
+    let start = ProcessSystemCPUClock::now();
+    let elapsed = ProcessSystemCPUClock::now() - start;
     assert!(elapsed < Duration::from_nanos(10));
 }
 
 #[test]
 fn test_process_cpu_clock() {
-    let start = ProcessCPUClock::now().unwrap();
+    let start = ProcessCPUClock::now();
     (0..4)
         .map(|_| thread::spawn(|| computation_task()))
         .for_each(|t| {
             let _ = t.join();
         });
-    let elapsed = ProcessCPUClock::now().unwrap() - start;
+    let elapsed = ProcessCPUClock::now() - start;
     assert!(elapsed.real > Duration::from_nanos(0));
     assert!(elapsed.user > Duration::from_nanos(0));
     assert!(elapsed.user + elapsed.system >= elapsed.real);
@@ -57,15 +57,15 @@ fn test_process_cpu_clock() {
 
 #[test]
 fn test_thread_clock() {
-    let start_outter = ThreadClock::now().unwrap();
+    let start_outter = ThreadClock::now();
     let elapsed_inner = thread::spawn(|| {
-        let start_inner = ThreadClock::now().unwrap();
+        let start_inner = ThreadClock::now();
         computation_task();
-        ThreadClock::now().unwrap() - start_inner
+        ThreadClock::now() - start_inner
     })
     .join()
     .unwrap();
-    let elapsed_outter = ThreadClock::now().unwrap() - start_outter;
+    let elapsed_outter = ThreadClock::now() - start_outter;
     assert!(elapsed_inner > Duration::from_nanos(0));
     assert!(elapsed_inner > elapsed_outter);
 }

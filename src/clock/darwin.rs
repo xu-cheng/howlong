@@ -2,7 +2,7 @@
 
 extern crate libc;
 
-use crate::{Duration, Error, Result, TimePoint};
+use crate::{Clock, Duration, Error, Result, TimePoint};
 use std::mem;
 
 #[allow(dead_code)]
@@ -23,8 +23,10 @@ mod mach {
 // `gettimeofday` is the most precise "system time" available on macOS.
 pub struct SystemClock;
 
-impl SystemClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for SystemClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let mut tv = libc::timeval {
             tv_sec: 0,
             tv_usec: 0,
@@ -44,8 +46,10 @@ impl SystemClock {
 // nanoseconds since the computer booted up.
 pub struct SteadyClock;
 
-impl SteadyClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for SteadyClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let mut info: mach::mach_timebase_info_data_t = unsafe { mem::zeroed() };
         let ret = unsafe { mach::mach_timebase_info(&mut info) };
         if ret != 0 {
@@ -67,8 +71,10 @@ pub use posix::{ProcessCPUClock, ProcessRealCPUClock, ProcessSystemCPUClock, Pro
 /// A clock to report the real thread wall-clock.
 pub struct ThreadClock;
 
-impl ThreadClock {
-    pub fn now() -> Result<TimePoint> {
+impl Clock for ThreadClock {
+    type Output = TimePoint;
+
+    fn try_now() -> Result<Self::Output> {
         let port = unsafe { mach::pthread_mach_thread_np(mach::pthread_self()) };
         let mut info: mach::thread_basic_info_data_t = unsafe { mem::zeroed() };
         let mut count: mach::mach_msg_type_number_t = mach::__THREAD_BASIC_INFO_COUNT;
