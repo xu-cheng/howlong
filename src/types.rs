@@ -100,6 +100,7 @@ impl SubAssign for ProcessDuration {
 
 /// A trait to represent a clock.
 pub trait Clock {
+    /// The returned timepoint type.
     type Output;
 
     /// Return the current timepoint.

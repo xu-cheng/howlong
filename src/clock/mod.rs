@@ -5,8 +5,8 @@
 //!   real-time clock.
 //! * [`SteadyClock`]: It provides access to system-wide steady clock. There is no fixed
 //!   relationship between values returned by `SteadyClock::now()` and wall-clock time
-//! * [`HighResolutionClock`]: Default to `SteadyClock` if available, otherwise fallback to
-//!   `SystemClock`.
+//! * [`HighResolutionClock`]: Default to [`SteadyClock`] if available, otherwise fallback to
+//!   [`SystemClock`].
 //! * [`ProcessRealCPUClock`]: It provides access to the real process wall-clock steady clock,
 //!   i.e. the real CPU-time clock of the calling process.
 //! * [`ProcessUserCPUClock`]: It provides access to the user CPU-time steady clock of the
