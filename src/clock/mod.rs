@@ -33,6 +33,25 @@
 //! | [`ProcessSystemCPUClock`] | `times` | `times` | `GetProcessTimes` |
 //! | [`ProcessCPUClock`] | `times` | `times` | `GetProcessTimes`, `QueryPerformanceCounter`, `QueryPerformanceFrequency` |
 //! | [`ThreadClock`] | `clock_gettime(pthread_getcpuclockid)` | `thread_info` | `GetThreadTimes` |
+//!
+//! # Examples
+//!
+//! ```
+//! use howlong::*;
+//!
+//! let start = HighResolutionClock::now();
+//! // do some computations
+//! let elapsed = HighResolutionClock::now() - start;
+//! println!("{:?} have passed.", elapsed);
+//!
+//! let start = ProcessCPUClock::now();
+//! // do other computations
+//! let elapsed = ProcessCPUClock::now() - start;
+//! println!(
+//!     "We spent {:?} user, {:?} system, {:?} total.",
+//!     elapsed.user, elapsed.system, elapsed.real
+//! );
+//! ```
 
 cfg_if::cfg_if! {
     if #[cfg(any(target_os = "macos", target_os = "ios"))] {
