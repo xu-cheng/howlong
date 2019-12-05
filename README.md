@@ -1,5 +1,9 @@
 # howlong
 
+[![Build Status](https://github.com/xu-cheng/howlong/workflows/build/badge.svg)](https://github.com/xu-cheng/howlong/actions)
+[![Latest Version](https://img.shields.io/crates/v/howlong.svg)](https://crates.io/crates/howlong)
+[![Rust Documentation](https://img.shields.io/badge/api-rustdoc-blue.svg)](https://docs.rs/howlong)
+
 This crate allows you to measure how long it takes for a program to execute in different clocks. It ports the functions of the [`boost-chrono`](https://boost.org/libs/chrono) and [`boost-timer`](https://boost.org/libs/timer) libraries.
 
 The following clocks and their corresponding timers are implemented.
