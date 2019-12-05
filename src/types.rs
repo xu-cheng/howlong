@@ -90,6 +90,19 @@ pub struct ProcessDuration {
     pub system: Duration,
 }
 
+impl ProcessDuration {
+    /// Return the total CPU time. Equivalent to `user + system`.
+    pub fn cpu_time(&self) -> Duration {
+        self.user + self.system
+    }
+
+    /// Return the percentage of the CPU time that the process used.
+    /// Equivalent to `(user + system) / real`.
+    pub fn cpu_usage(&self) -> f64 {
+        self.cpu_time().as_secs_f64() / self.real.as_secs_f64()
+    }
+}
+
 impl Add for ProcessDuration {
     type Output = Self;
 
@@ -127,6 +140,20 @@ impl SubAssign for ProcessDuration {
     #[inline(always)]
     fn sub_assign(&mut self, rhs: Self) {
         *self = *self - rhs;
+    }
+}
+
+impl core::fmt::Display for ProcessDuration {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "{:?} wall, {:?} user + {:?} system = {:?} CPU ({:>3.1}%)",
+            self.real,
+            self.user,
+            self.system,
+            self.cpu_time(),
+            self.cpu_usage() * 100f64,
+        )
     }
 }
 
