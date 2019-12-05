@@ -1,6 +1,6 @@
 [package]
 name = "howlong"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Cheng XU <rust@xuc.me>"]
 edition = "2018"
 build = "build.rs"
