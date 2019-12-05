@@ -29,6 +29,18 @@ impl Sub for TimePoint {
     }
 }
 
+impl From<Duration> for TimePoint {
+    fn from(d: Duration) -> Self {
+        TimePoint(d)
+    }
+}
+
+impl Into<Duration> for TimePoint {
+    fn into(self) -> Duration {
+        self.0
+    }
+}
+
 /// Like [`TimePoint`] but captures real, user-CPU, and system-CPU process times.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ProcessTimePoint {
@@ -46,6 +58,26 @@ impl Sub for ProcessTimePoint {
             real: self.real - other.real,
             user: self.user - other.user,
             system: self.system - other.system,
+        }
+    }
+}
+
+impl From<ProcessDuration> for ProcessTimePoint {
+    fn from(d: ProcessDuration) -> Self {
+        ProcessTimePoint {
+            real: d.real,
+            user: d.user,
+            system: d.system,
+        }
+    }
+}
+
+impl Into<ProcessDuration> for ProcessTimePoint {
+    fn into(self) -> ProcessDuration {
+        ProcessDuration {
+            real: self.real,
+            user: self.user,
+            system: self.user,
         }
     }
 }
