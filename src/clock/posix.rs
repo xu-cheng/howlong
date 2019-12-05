@@ -29,8 +29,8 @@ impl Clock for SystemClock {
     }
 }
 
-/// A steady clock.
 #[cfg(have_steady_clock)]
+#[doc = "A steady clock."]
 pub struct SteadyClock;
 
 #[cfg(have_steady_clock)]
