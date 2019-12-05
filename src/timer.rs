@@ -1,6 +1,6 @@
 use crate::{clock::*, Clock, Duration, ProcessDuration, ProcessTimePoint, TimePoint};
-use std::marker::PhantomData;
-use std::ops::Sub;
+use core::marker::PhantomData;
+use core::ops::Sub;
 use std::rc::Rc;
 
 pub struct Timer<ClockType, TimePointType, DurationType>

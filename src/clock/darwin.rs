@@ -3,7 +3,7 @@
 extern crate libc;
 
 use crate::{Clock, Duration, Error, Result, TimePoint};
-use std::mem;
+use core::mem;
 
 #[allow(dead_code)]
 #[path = "./posix.rs"]

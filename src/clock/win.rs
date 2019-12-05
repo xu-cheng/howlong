@@ -2,7 +2,7 @@
 
 extern crate winapi;
 
-use std::mem;
+use core::mem;
 use winapi::shared::minwindef::FILETIME;
 use winapi::um::{
     errhandlingapi::GetLastError,
