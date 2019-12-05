@@ -19,7 +19,7 @@ The following clocks and their corresponding timers are implemented.
 
 ## Documentation
 
-<https://doc.rs/howlong>
+<https://docs.rs/howlong>
 
 ## Usage
 
