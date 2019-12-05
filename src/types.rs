@@ -144,10 +144,14 @@ impl SubAssign for ProcessDuration {
 }
 
 impl core::fmt::Display for ProcessDuration {
+    /// Formats the [`ProcessDuration`]. It will look something like this:
+    /// ```text
+    /// 5.71s wall, 5.70s user + 0ns system = 5.70s CPU (99.8%)
+    /// ```
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(
             f,
-            "{:?} wall, {:?} user + {:?} system = {:?} CPU ({:>3.1}%)",
+            "{:?} wall, {:?} user + {:?} system = {:?} CPU ({:.1}%)",
             self.real,
             self.user,
             self.system,
