@@ -69,7 +69,7 @@ impl Clock for ProcessRealCPUClock {
     type Output = TimePoint;
 
     fn try_now() -> Result<Self::Output> {
-        SteadyClock::now()
+        SteadyClock::try_now()
     }
 }
 
@@ -139,7 +139,7 @@ impl Clock for ProcessCPUClock {
     fn try_now() -> Result<Self::Output> {
         let (user_time, system_time) = get_process_times()?;
         Ok(ProcessTimePoint {
-            real: SteadyClock::now()?.0,
+            real: SteadyClock::try_now()?.0,
             user: filetime_to_duration(user_time),
             system: filetime_to_duration(system_time),
         })
