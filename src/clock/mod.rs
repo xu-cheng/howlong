@@ -21,7 +21,7 @@
 //! # Implementations
 //!
 //! The Implementations of the clocks are based on
-//! [`boost-chrono` library](http://boost.org/libs/chrono)
+//! [`boost-chrono` library](https://boost.org/libs/chrono).
 //! The following table listes the underlying APIs for different clocks.
 //!
 //! | Clock | Posix | Darwin | Windows |

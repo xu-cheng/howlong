@@ -85,8 +85,11 @@ impl Into<ProcessDuration> for ProcessTimePoint {
 /// Like [`Duration`] but captures real, user-CPU, and system-CPU process times.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct ProcessDuration {
+    /// [`Duration`] measured by wall-time clock.
     pub real: Duration,
+    /// [`Duration`] measured by user-CPU clock.
     pub user: Duration,
+    /// [`Duration`] measured by system-CPU clock.
     pub system: Duration,
 }
 

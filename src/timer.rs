@@ -1,7 +1,7 @@
 //! Measure how long a program takes to execute.
 //!
 //! A varity of timers are implemented using different clocks.
-//! See [`crate::clock`] to read more about their difference.
+//! See [`crate::clock`] to read more about their differences.
 //!
 //! # Examples
 //!

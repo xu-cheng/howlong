@@ -5,7 +5,9 @@ authors = ["Cheng XU <rust@xuc.me>"]
 edition = "2018"
 build = "build.rs"
 license = "MIT OR Apache-2.0"
+description = "Measure how long it takes for a program to execute in different clocks"
 repository = "https://github.com/xu-cheng/howlong"
+documentation = "https://docs.rs/howlong"
 readme = "README.md"
 
 [dependencies]
