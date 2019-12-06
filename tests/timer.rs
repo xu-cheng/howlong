@@ -1,9 +1,9 @@
-extern crate criterion;
 extern crate howlong;
 
-use criterion::black_box;
 use howlong::{timer::*, Duration};
 use std::thread;
+
+mod utils;
 
 macro_rules! test_timer {
     ($name: ident, $timer: ty) => {
@@ -38,14 +38,10 @@ test_timer!(test_steady_timer, SteadyTimer);
 test_timer!(test_high_resolution_timer, HighResolutionTimer);
 test_timer!(test_process_real_cpu_timer, ProcessRealCPUTimer);
 
-fn computation_task() {
-    black_box((0..1_000_000).fold(0, |old, new| black_box(old ^ new)));
-}
-
 #[test]
 fn test_process_user_cpu_timer() {
     let timer = ProcessUserCPUTimer::new();
-    computation_task();
+    utils::black_box(utils::computation_task());
     let elapsed = timer.elapsed();
     assert!(elapsed > Duration::from_nanos(0));
 }
@@ -60,11 +56,7 @@ fn test_process_system_cpu_timer() {
 #[test]
 fn test_process_cpu_timer() {
     let timer = ProcessCPUTimer::new();
-    (0..4)
-        .map(|_| thread::spawn(|| computation_task()))
-        .for_each(|t| {
-            let _ = t.join();
-        });
+    utils::black_box(utils::multithreading_task());
     let elapsed = timer.elapsed();
     println!("{}", elapsed);
     assert!(elapsed.cpu_usage() >= 1f64);
@@ -78,7 +70,7 @@ fn test_thread_timer() {
     let timer_outer = ThreadTimer::new();
     let elapsed_inner = thread::spawn(|| {
         let timer_inner = ThreadTimer::new();
-        computation_task();
+        utils::black_box(utils::computation_task());
         timer_inner.elapsed()
     })
     .join()

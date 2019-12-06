@@ -1,9 +1,9 @@
-extern crate criterion;
 extern crate howlong;
 
-use criterion::black_box;
 use howlong::{clock::*, Clock, Duration};
 use std::thread;
+
+mod utils;
 
 macro_rules! test_clock {
     ($name: ident, $clock: ty) => {
@@ -24,14 +24,10 @@ test_clock!(test_steady_clock, SteadyClock);
 test_clock!(test_high_resolution_clock, HighResolutionClock);
 test_clock!(test_process_real_cpu_clock, ProcessRealCPUClock);
 
-fn computation_task() {
-    black_box((0..1_000_000).fold(0, |old, new| black_box(old ^ new)));
-}
-
 #[test]
 fn test_process_user_cpu_clock() {
     let start = ProcessUserCPUClock::now();
-    computation_task();
+    utils::black_box(utils::computation_task());
     let elapsed = ProcessUserCPUClock::now() - start;
     assert!(elapsed > Duration::from_nanos(0));
 }
@@ -46,11 +42,7 @@ fn test_process_system_cpu_clock() {
 #[test]
 fn test_process_cpu_clock() {
     let start = ProcessCPUClock::now();
-    (0..4)
-        .map(|_| thread::spawn(|| computation_task()))
-        .for_each(|t| {
-            let _ = t.join();
-        });
+    utils::black_box(utils::multithreading_task());
     let elapsed = ProcessCPUClock::now() - start;
     assert!(elapsed.real > Duration::from_nanos(0));
     assert!(elapsed.user > Duration::from_nanos(0));
@@ -62,7 +54,7 @@ fn test_thread_clock() {
     let start_outter = ThreadClock::now();
     let elapsed_inner = thread::spawn(|| {
         let start_inner = ThreadClock::now();
-        computation_task();
+        utils::black_box(utils::computation_task());
         ThreadClock::now() - start_inner
     })
     .join()
