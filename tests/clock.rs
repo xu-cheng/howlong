@@ -1,5 +1,7 @@
+extern crate criterion;
 extern crate howlong;
 
+use criterion::black_box;
 use howlong::{clock::*, Clock, Duration};
 use std::thread;
 
@@ -23,7 +25,7 @@ test_clock!(test_high_resolution_clock, HighResolutionClock);
 test_clock!(test_process_real_cpu_clock, ProcessRealCPUClock);
 
 fn computation_task() {
-    let _ = (0..1_000_000).fold(0, |old, new| old ^ new);
+    black_box((0..1_000_000).fold(0, |old, new| black_box(old ^ new)));
 }
 
 #[test]

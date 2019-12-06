@@ -1,5 +1,7 @@
+extern crate criterion;
 extern crate howlong;
 
+use criterion::black_box;
 use howlong::{timer::*, Duration};
 use std::thread;
 
@@ -37,7 +39,7 @@ test_timer!(test_high_resolution_timer, HighResolutionTimer);
 test_timer!(test_process_real_cpu_timer, ProcessRealCPUTimer);
 
 fn computation_task() {
-    let _ = (0..1_000_000).fold(0, |old, new| old ^ new);
+    black_box((0..1_000_000).fold(0, |old, new| black_box(old ^ new)));
 }
 
 #[test]
@@ -51,7 +53,6 @@ fn test_process_user_cpu_timer() {
 #[test]
 fn test_process_system_cpu_timer() {
     let timer = ProcessSystemCPUTimer::new();
-    computation_task();
     let elapsed = timer.elapsed();
     assert!(elapsed < Duration::from_nanos(10));
 }

@@ -21,6 +21,9 @@ libc = "0.2"
 [target.'cfg(windows)'.dependencies]
 winapi = { version = "0.3", features = ["profileapi", "sysinfoapi"] }
 
+[dev-dependencies]
+criterion = "0.3"
+
 [target.'cfg(unix)'.build-dependencies]
 cc = "1.0"
 
