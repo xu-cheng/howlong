@@ -1,7 +1,5 @@
 // Ref: https://github.com/boostorg/chrono/tree/develop/include/boost/chrono/detail/inlined/mac
 
-extern crate libc;
-
 use crate::{Clock, Duration, Error, Result, TimePoint};
 use core::mem;
 

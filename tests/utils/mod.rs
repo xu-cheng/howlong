@@ -1,5 +1,3 @@
-extern crate criterion;
-
 pub(crate) use criterion::black_box;
 
 pub(crate) fn computation_task() -> usize {

@@ -1,7 +1,5 @@
 // Ref: https://github.com/boostorg/chrono/tree/develop/include/boost/chrono/detail/inlined/win
 
-extern crate winapi;
-
 use core::mem;
 use winapi::shared::minwindef::FILETIME;
 use winapi::um::{

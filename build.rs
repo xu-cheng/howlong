@@ -1,8 +1,3 @@
-#[cfg(any(target_os = "macos", target_os = "ios"))]
-extern crate bindgen;
-#[cfg(unix)]
-extern crate cc;
-
 #[cfg(unix)]
 fn is_defined(m: &'static str) -> bool {
     let file = format!("{}/test_{}.c", std::env::var("OUT_DIR").unwrap(), m);

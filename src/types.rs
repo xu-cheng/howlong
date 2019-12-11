@@ -1,5 +1,3 @@
-extern crate thiserror;
-
 use core::ops::{Add, AddAssign, Sub, SubAssign};
 
 #[derive(thiserror::Error, Debug)]

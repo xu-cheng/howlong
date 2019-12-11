@@ -1,8 +1,5 @@
 // Ref: https://github.com/boostorg/chrono/tree/develop/include/boost/chrono/detail/inlined/posix
 
-extern crate errno;
-extern crate libc;
-
 use crate::{Clock, Duration, Error, ProcessTimePoint, Result, TimePoint};
 
 pub(crate) fn errno() -> i32 {

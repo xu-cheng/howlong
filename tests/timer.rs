@@ -1,5 +1,3 @@
-extern crate howlong;
-
 use howlong::{timer::*, Duration};
 use std::thread;
 
