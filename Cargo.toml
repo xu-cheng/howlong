@@ -9,6 +9,8 @@ description = "Measure how long it takes for a program to execute in different c
 repository = "https://github.com/xu-cheng/howlong"
 documentation = "https://docs.rs/howlong"
 readme = "README.md"
+keywords = ["timer", "chrono"]
+categories = ["development-tools", "development-tools::profiling"]
 
 [dependencies]
 thiserror = "1.0"
