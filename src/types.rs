@@ -1,5 +1,7 @@
 use core::ops::{Add, AddAssign, Sub, SubAssign};
 
+/// Error type for this crate.
+#[non_exhaustive]
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
     /// Error during the system call.
@@ -10,6 +12,7 @@ pub enum Error {
     ClkFreqTooHigh,
 }
 
+/// Alias to `core::result::Result<T, katex::Error>`
 pub type Result<T> = core::result::Result<T, Error>;
 
 pub use core::time::Duration;
