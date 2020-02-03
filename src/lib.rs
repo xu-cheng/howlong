@@ -26,13 +26,11 @@
 //! # Examples
 //!
 //! ```
-//! use howlong::*;
-//!
-//! let timer = HighResolutionTimer::new();
+//! let timer = howlong::HighResolutionTimer::new();
 //! // do some computations
 //! println!("{:?} have passed.", timer.elapsed());
 //!
-//! let timer = ProcessCPUTimer::new();
+//! let timer = howlong::ProcessCPUTimer::new();
 //! // do other computations
 //! println!("{}", timer.elapsed());
 //! ```
