@@ -12,7 +12,7 @@ pub enum Error {
     ClkFreqTooHigh,
 }
 
-/// Alias to `core::result::Result<T, katex::Error>`
+/// Alias to `core::result::Result<T, howlong::Error>`
 pub type Result<T> = core::result::Result<T, Error>;
 
 pub use core::time::Duration;

@@ -6,15 +6,13 @@
 //! # Examples
 //!
 //! ```
-//! use howlong::*;
-//!
-//! let timer = HighResolutionTimer::new();
+//! let timer = howlong::HighResolutionTimer::new();
 //! // do some computations
 //! println!("{:?} have passed.", timer.elapsed());
 //!
-//! let timer = ProcessCPUTimer::new();
+//! let timer = howlong::ProcessCPUTimer::new();
 //! // do other computations
-//! println!("{}", timer.elapsed());
+//! println!("{}", timer.elapsed()); // 5.71s wall, 5.70s user + 0ns system = 5.70s CPU (99.8%)
 //! ```
 
 use crate::{clock::*, Clock, Duration, ProcessDuration, ProcessTimePoint, TimePoint};

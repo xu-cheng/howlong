@@ -32,7 +32,7 @@
 //!
 //! let timer = howlong::ProcessCPUTimer::new();
 //! // do other computations
-//! println!("{}", timer.elapsed());
+//! println!("{}", timer.elapsed()); // 5.71s wall, 5.70s user + 0ns system = 5.70s CPU (99.8%)
 //! ```
 
 mod types;
