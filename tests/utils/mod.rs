@@ -19,7 +19,7 @@ pub(crate) fn computation_task() -> usize {
 
 pub(crate) fn multithreading_task() -> usize {
     (0..4)
-        .map(|_| std::thread::spawn(|| computation_task()))
+        .map(|_| std::thread::spawn(computation_task))
         .map(|t| t.join().unwrap())
         .sum()
 }
