@@ -34,6 +34,8 @@
 //! | [`ProcessCPUClock`] | `times` | `times` | `GetProcessTimes`, `QueryPerformanceCounter`, `QueryPerformanceFrequency` |
 //! | [`ThreadClock`] | `clock_gettime(pthread_getcpuclockid)` | `thread_info` | `GetThreadTimes` |
 //!
+//! `HighResolutionClock`, `ProcessRealCPUClock`, and the `real` field in the result of `ProcessCPUClock` *all* semantically provide "real" (or "wall clock") time but differ in their internal implementation across operating systems as shown above.
+//!
 //! # Examples
 //!
 //! ```
@@ -52,6 +54,8 @@
 //!     elapsed.user, elapsed.system, elapsed.real
 //! );
 //! ```
+//!
+//! Note that, above, `elapsed.real` from `ProcessCPUClock` would be identical to `elapsed` from `ProcessRealCPUClock` and is semantically identical to `elapsed` from `HighResolutionClock`.
 
 cfg_if::cfg_if! {
     if #[cfg(any(target_os = "macos", target_os = "ios"))] {
