@@ -28,6 +28,6 @@ jobs:
         uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features --tests -- -D warnings
+          args: --all-features --all-targets -- -D warnings
           name: clippy [${{ matrix.os }}]
 
