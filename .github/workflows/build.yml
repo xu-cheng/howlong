@@ -23,6 +23,7 @@ jobs:
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+        if: matrix.os != 'macos'
       - name: Run cargo build
         uses: actions-rs/cargo@v1
         with:

@@ -25,6 +25,7 @@ jobs:
         with:
           path: target
           key: ${{ runner.os }}-cargo-clippy-target-${{ hashFiles('**/Cargo.lock') }}
+        if: matrix.os != 'macos'
       - name: Run clippy
         uses: actions-rs/clippy-check@v1
         with:
