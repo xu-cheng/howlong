@@ -1,0 +1,33 @@
+name: clippy
+on: [push, pull_request]
+jobs:
+  clippy:
+    strategy:
+      matrix:
+        os: [ubuntu, macos, windows]
+    name: clippy [${{ matrix.os }}]
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+      - name: Set up rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: clippy
+      - name: Run cargo generate-lockfile
+        uses: actions-rs/cargo@v1
+        with:
+          command: generate-lockfile
+      - name: Cache cargo clippy
+        uses: actions/cache@v1
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-clippy-target-${{ hashFiles('**/Cargo.lock') }}
+      - name: Run clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features --tests -- -D warnings
+          name: clippy [${{ matrix.os }}]
+
