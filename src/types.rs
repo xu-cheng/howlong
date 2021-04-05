@@ -36,9 +36,9 @@ impl From<Duration> for TimePoint {
     }
 }
 
-impl Into<Duration> for TimePoint {
-    fn into(self) -> Duration {
-        self.0
+impl From<TimePoint> for Duration {
+    fn from(t: TimePoint) -> Self {
+       t.0
     }
 }
 
