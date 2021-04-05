@@ -38,7 +38,7 @@ impl From<Duration> for TimePoint {
 
 impl From<TimePoint> for Duration {
     fn from(t: TimePoint) -> Self {
-       t.0
+        t.0
     }
 }
 
