@@ -35,4 +35,4 @@ criterion = "0.3"
 cc = "1.0"
 
 [target.'cfg(any(target_os = "macos", target_os = "ios"))'.build-dependencies]
-bindgen = "0.56"
+bindgen = "0.58"
