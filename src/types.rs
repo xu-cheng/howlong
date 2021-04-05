@@ -73,12 +73,12 @@ impl From<ProcessDuration> for ProcessTimePoint {
     }
 }
 
-impl Into<ProcessDuration> for ProcessTimePoint {
-    fn into(self) -> ProcessDuration {
+impl From<ProcessTimePoint> for ProcessDuration {
+    fn from(t: ProcessTimePoint) -> Self {
         ProcessDuration {
-            real: self.real,
-            user: self.user,
-            system: self.user,
+            real: t.real,
+            user: t.user,
+            system: t.user,
         }
     }
 }

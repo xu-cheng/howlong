@@ -35,6 +35,8 @@
 //! println!("{}", timer.elapsed()); // 5.71s wall, 5.70s user + 0ns system = 5.70s CPU (99.8%)
 //! ```
 
+#![allow(clippy::upper_case_acronyms)]
+
 mod types;
 pub use types::*;
 

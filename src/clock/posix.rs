@@ -144,12 +144,6 @@ extern "C" {
     ) -> libc::c_int;
 }
 
-#[cfg(have_clock_thread_cputime_id)]
-#[inline(always)]
-fn get_thread_clock_id() -> Result<libc::clockid_t> {
-    Ok(libc::CLOCK_THREAD_CPUTIME_ID)
-}
-
 #[cfg(not(have_clock_thread_cputime_id))]
 #[inline(always)]
 fn get_thread_clock_id() -> Result<libc::clockid_t> {
@@ -169,6 +163,9 @@ impl Clock for ThreadClock {
             tv_sec: 0,
             tv_nsec: 0,
         };
+        #[cfg(have_clock_thread_cputime_id)]
+        let clock_id = libc::CLOCK_THREAD_CPUTIME_ID;
+        #[cfg(not(have_clock_thread_cputime_id))]
         let clock_id = get_thread_clock_id()?;
         let ret = unsafe { libc::clock_gettime(clock_id, &mut ts) };
         if ret != 0 {
