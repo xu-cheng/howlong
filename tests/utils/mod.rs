@@ -1,4 +1,11 @@
-pub(crate) use criterion::black_box;
+#[inline(never)]
+pub(crate) fn black_box<T>(input: T) -> T {
+    unsafe {
+        let ret = core::ptr::read_volatile(&input);
+        core::mem::forget(input);
+        ret
+    }
+}
 
 pub(crate) fn computation_task() -> usize {
     fn fib(n: usize) -> usize {

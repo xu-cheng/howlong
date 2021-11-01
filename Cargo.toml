@@ -29,9 +29,6 @@ features = [
     "sysinfoapi",
 ]
 
-[dev-dependencies]
-criterion = "0.3"
-
 [target.'cfg(unix)'.build-dependencies]
 cc = "1.0"
 
